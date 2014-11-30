@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  namespace :openscap, :module => :foreman_scap do
+  namespace :openscap, :module => :foreman_openscap do
     resources :scap_contents
     resources :arf_reports, :only => [:index, :show, :destroy]
     resources :policies do

@@ -1,5 +1,5 @@
 module ForemanOpenscap
-  class ScapContentsController < ApplicationController
+  class ScapContentsController < ForemanOpenscap::ApplicationController
     include Foreman::Controller::AutoCompleteSearch
     before_filter :handle_file_upload, :only => [:create]
     before_filter :find_resource, :only => [:show, :edit, :update]
@@ -41,6 +41,14 @@ module ForemanOpenscap
       return unless params[:scap_content] && (t = params[:scap_content][:scap_file])
       params[:scap_content][:original_filename] = t.original_filename
       params[:scap_content][:scap_file]         = t.read if t.respond_to?(:read)
+    end
+
+    def model_of_controller
+      Scaptimony::ScapContent
+    end
+
+    def resource_class
+      model_of_controller
     end
   end
 end
