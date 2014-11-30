@@ -1,5 +1,5 @@
 require 'deface'
-require 'scaptimony/engine'
+require 'foreman_openscap/engine'
 
 module ForemanOpenscap
   class Engine < ::Rails::Engine
@@ -32,13 +32,13 @@ module ForemanOpenscap
 
         # Add permissions
         security_block :foreman_openscap do
-          permission :view_arf_reports, {:scaptimony_arf_reports => [:index, :show],
-                                         :scaptimony_policies => [:index, :show],
-                                         :scaptimony_scap_contents => [:index, :show],
+          permission :view_arf_reports, {'scaptimony/arf_reports' => [:index, :show],
+                                         'scaptimony/policies' => [:index, :show],
+                                         'scaptimony/scap_contents' => [:index, :show],
                                         }
-          permission :edit_compliance, {:scaptimony_arf_reports => [:destroy],
-                                        :scaptimony_policies => [:new, :create, :edit, :update, :destroy],
-                                        :scaptimony_scap_contents => [:new, :create, :edit, :update]
+          permission :edit_compliance, {'scaptimony/arf_reports' => [:destroy],
+                                        'scaptimony/policies' => [:new, :create, :edit, :update, :destroy],
+                                        'scaptimony/scap_contents' => [:new, :create, :edit, :update]
                                        }
         end
 
@@ -48,13 +48,13 @@ module ForemanOpenscap
         #add menu entries
         divider :top_menu, :caption => N_('Compliance'), :parent => :hosts_menu
         menu :top_menu, :compliance_policies, :caption => N_('Policies'),
-             :url_hash => {:controller => :'scaptimony_policies', :action => :index },
+             :url_hash => {:controller => :'foreman_openscap/policies', :action => :index },
              :parent => :hosts_menu
         menu :top_menu, :compliance_contents, :caption => N_('SCAP contents'),
-             :url_hash => {:controller => :'scaptimony_scap_contents', :action => :index },
+             :url_hash => {:controller => :'foreman_openscap/scap_contents', :action => :index },
              :parent => :hosts_menu
         menu :top_menu, :compliance_reports, :caption => N_('Reports'),
-             :url_hash => {:controller => :'scaptimony_arf_reports', :action => :index },
+             :url_hash => {:controller => :'foreman_openscap/arf_reports', :action => :index },
              :parent   => :hosts_menu
       end
     end
@@ -63,7 +63,7 @@ module ForemanOpenscap
     config.to_prepare do
       begin
         Host::Managed.send(:include, ForemanOpenscap::HostExtensions)
-        HostsHelper.send(:include, ForemanOpenscap::HostsHelperExtensions)
+        # HostsHelper.send(:include, ForemanOpenscap::HostsHelperExtensions)
         ::Scaptimony::ArfReport.send(:include, ForemanOpenscap::ArfReportExtensions)
         ::Scaptimony::Policy.send(:include, ForemanOpenscap::PolicyExtensions)
         ::Scaptimony::ScapContent.send(:include, ForemanOpenscap::ScapContentExtensions)

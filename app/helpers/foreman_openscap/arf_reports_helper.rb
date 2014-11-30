@@ -7,16 +7,11 @@
 # FOR A PARTICULAR PURPOSE. You should have received a copy of GPLv3
 # along with this software; if not, see http://www.gnu.org/licenses/gpl.txt
 #
-
-module ::Scaptimony
-  class AuditableHost < ActiveRecord::Base
-    # Links Foreman's Host table with SCAPtimony's Asset table
-    belongs_to :asset, :inverse_of => :auditable_host
-    belongs_to_host :inverse_of => :auditable_host
-  end
-
- class Asset < ActiveRecord::Base
-    has_one :auditable_host, :inverse_of => :asset
-    has_one :host, :through => :auditable_host
+module ForemanOpenscap
+  module ArfReportsHelper
+    def report_arf_column(event, style = "")
+      style = "label-default" if event == 0
+      content_tag(:span, event, :class => 'label ' + style)
+    end
   end
 end

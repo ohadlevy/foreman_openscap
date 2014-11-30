@@ -8,7 +8,7 @@
 # along with this software; if not, see http://www.gnu.org/licenses/gpl.txt
 #
 
-require 'scaptimony/arf_reports_helper'
+require 'foreman_openscap/arf_reports_helper'
 require 'foreman_openscap/helper'
 
 module Api
@@ -21,15 +21,15 @@ module Api
 
         add_puppetmaster_filters :create
 
-        api :POST, "/arf/:cname/:policy_name/:date", N_("Upload an ARF report")
+        api :POST, '/arf/:cname/:policy_name/:date', N_('Upload an ARF report')
         param :cname, :identifier, :required => true
         param :policy_name, :identifier, :required => true
         param :date, :identifier, :required => true
 
         def create
-          asset = ForemanOpenscap::Helper::get_asset(params[:cname])
+          asset     = ForemanOpenscap::Helper::get_asset(params[:cname])
           arf_bzip2 = request.body.read
-          received = Scaptimony::ArfReportsHelper.create_arf(asset, params, arf_bzip2)
+          received  = ForemanOpenscap::ArfReportsHelper.create_arf(asset, params, arf_bzip2)
           render :json => { :result => :OK, :received => received }
         end
 
@@ -41,8 +41,7 @@ module Api
           # What's worse, a framework will try to parse body as an utf8 string,
           # no matter what content-encoding says. Let's pass content-type arf-bzip2
           # and move forward.
-          super unless
-            request.content_type.end_with? 'arf-bzip2' and
+          super unless request.content_type.end_with? 'arf-bzip2' &&
             request.env['HTTP_CONTENT_ENCODING'] == 'x-bzip2'
         end
       end

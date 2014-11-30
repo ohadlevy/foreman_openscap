@@ -8,9 +8,9 @@
 # along with this software; if not, see http://www.gnu.org/licenses/gpl.txt
 #
 
-module ArfReportsHelper
-  def report_arf_column(event, style = "")
-    style = "label-default" if event == 0
-    content_tag(:span, event, :class=>'label ' + style)
+module ForemanOpenscap
+  class Asset < ActiveRecord::Base
+    has_one :auditable_host, :inverse_of => :asset
+    has_one :host, :through => :auditable_host
   end
 end

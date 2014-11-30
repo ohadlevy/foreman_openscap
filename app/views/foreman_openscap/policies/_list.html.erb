@@ -1,0 +1,34 @@
+<table class="table table-bordered table-striped table-two-pane">
+  <tr>
+    <th>Name</th>
+    <th>Content</th>
+    <th>Profile</th>
+    <th></th>
+  </tr>
+  <% @policies.each do |policy| %>
+    <tr>
+      <td>
+        <%= link_to_if_authorized policy.name,
+                                  hash_for_edit_scaptimony_policy_path(:id => policy).merge(
+                                      :auth_object => policy, :authorizer => authorizer) %>
+      </td>
+      <td>
+        <% if policy.scap_content %>
+          <%= link_to_if_authorized policy.scap_content.title,
+                                    hash_for_edit_scaptimony_scap_content_path(:id => policy.scap_content) %>
+        <% end %>
+      </td>
+      <td>
+        <%= policy.scap_content_profile.nil? ? 'Default' : policy.scap_content_profile.title %>
+      </td>
+      <td>
+        <%= action_buttons(
+                link_to_if_authorized(_('Show Guide'), hash_for_scaptimony_policy_path(:id => policy.id)),
+                link_to_if_authorized(_('Edit'), hash_for_edit_scaptimony_policy_path(:id => policy.id)),
+                display_delete_if_authorized(hash_for_scaptimony_policy_path(:id => policy.id),
+                                             :confirm => _('Delete compliance policy %s with all the reports?') % policy.name)
+            ) %>
+      </td>
+    </tr>
+  <% end %>
+</table>
